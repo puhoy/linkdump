@@ -1,0 +1,10 @@
+*.egg-info
+env/
+.idea
+*.db
+
+*.pyc
+*__pychache__/
+migrations/
+
+
