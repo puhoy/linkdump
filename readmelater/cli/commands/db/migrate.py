@@ -4,6 +4,6 @@ import click
 from flask_migrate import init, migrate, upgrade
 
 
-@db_group.command()
+@db_group.command('migrate')
 def db_migrate():
     migrate()

@@ -2,19 +2,16 @@ import flask
 
 from readmelater.config import environments
 
-__version__ = '0.4.2'
-
 import logging
 import os
 
-APP_NAME = 'lspace'
-os.environ['FLASK_APP'] = os.path.join(os.path.dirname(__file__), 'app.py')
 
-import click
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
+from flask_dramatiq import Dramatiq
+from flask_login import LoginManager
 
 # fix migration for sqlite: https://github.com/miguelgrinberg/Flask-Migrate/issues/61#issuecomment-208131722
 naming_convention = {
@@ -28,7 +25,8 @@ db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 
 migrate = Migrate()
 logger = logging.getLogger(__name__)
-
+dramatiq = Dramatiq()
+login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__,
@@ -40,15 +38,18 @@ def create_app():
 
     db.init_app(app)
 
+    dramatiq.init_app(app)
+    login_manager.init_app(app)
+
     migration_dir = os.path.join(os.path.dirname(__file__), 'migrations')
 
 
     # fix migration for sqlite: https://github.com/miguelgrinberg/Flask-Migrate/issues/61#issuecomment-208131722
     with app.app_context():
         if db.engine.url.drivername == 'sqlite':
-            migrate.init_app(app, db, render_as_batch=True, directory=migration_dir)
+            migrate.init_app(app, db, render_as_batch=True, directory=migration_dir, compare_type=True, compare_server_default=True)
         else:
-            migrate.init_app(app, db, directory=migration_dir)
+            migrate.init_app(app, db, directory=migration_dir, compare_type=True, compare_server_default=True)
 
         def url_for_self(**args):
             return flask.url_for(flask.request.endpoint, **{**flask.request.view_args, **flask.request.args, **args})
@@ -65,3 +66,5 @@ def create_app():
 
 
 app = create_app()
+
+from readmelater.routes import *

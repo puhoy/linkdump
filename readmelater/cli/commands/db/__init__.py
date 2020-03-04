@@ -1,9 +1,11 @@
 import click
 from readmelater.cli import cli
+from readmelater.models import *
 
-@cli.group('db')
+@cli.group('_db')
 def db_group():
     pass
+
 
 from readmelater.cli.commands.db.init import db_init
 from readmelater.cli.commands.db.migrate import db_migrate
