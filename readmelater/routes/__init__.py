@@ -1,1 +1,1 @@
-from readmelater.routes.feeds import get_feed
+from readmelater.routes.feeds import *

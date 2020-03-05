@@ -10,7 +10,9 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:secret@localhost/development'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:secret@db/development'
 
-    BASE_URL = 'http://localhost:5000/'
+    SERVER_NAME = 'localhost:8080'
+    BASE_URL = 'http://localhost:8080/'
     DRAMATIQ_BROKER = RedisBroker
+    DRAMATIQ_BROKER_URL = 'redis://redis/'

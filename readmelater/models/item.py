@@ -4,6 +4,7 @@ import requests
 from readability import Document
 
 from readmelater import db, dramatiq
+from xml.etree import ElementTree
 
 
 class Item(db.Model):
@@ -29,8 +30,12 @@ class Item(db.Model):
 
     users = db.relationship("User", secondary="bookmarks", lazy='dynamic')
 
+    @property
+    def body_plain_text(self):
+        return ''.join(ElementTree.fromstring(self.body).itertext())
+
     @staticmethod
-    def create(source, title=None, body=None, date_added=None, save=True) -> (bool, 'Item'):
+    def create(source, title=None, body=None, date_added=None, save=True, process=True) -> (bool, 'Item'):
         if not date_added:
             date_added = date.today()
 
@@ -49,7 +54,10 @@ class Item(db.Model):
             if save:
                 db.session.add(item)
                 db.session.commit()
-
+            
+            if save and process:
+                item.process()
+            
         return created, item
 
     def __repr__(self):
@@ -58,10 +66,9 @@ class Item(db.Model):
     def process(self):
         print('processing item...')
         _process_url.send(self.id, self.source)
-        
 
 
-@dramatiq.actor()
+@dramatiq.actor(max_retries=3)
 def _process_url(id: int, url: str):
     date_processing_started = datetime.utcnow()
     response = requests.get(url)
