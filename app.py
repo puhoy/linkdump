@@ -1,1 +1,1 @@
-from readmelater import app
+from linkdump import app
