@@ -10,8 +10,9 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from flask_dramatiq import Dramatiq
+from flask_misaka import Misaka
 
-from linkdump.routes.frontend.forms.security.extended_register_form import ExtendedRegisterForm
+from linkdump.routes.forms.security.extended_register_form import ExtendedRegisterForm
 # fix migration for sqlite: https://github.com/miguelgrinberg/Flask-Migrate/issues/61#issuecomment-208131722
 
 naming_convention = {
@@ -26,7 +27,7 @@ db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
 logger = logging.getLogger(__name__)
 dramatiq = Dramatiq()
-
+misaka = Misaka()
 # Setup Flask-Security
 
 security = Security()
@@ -45,6 +46,8 @@ def create_app():
     db.init_app(app)
 
     dramatiq.init_app(app)
+
+    misaka.init_app(app)
 
     security.init_app(app, SQLAlchemyUserDatastore(db, User, Role), register_form=ExtendedRegisterForm)
 
@@ -78,3 +81,5 @@ app = create_app()
 
 from linkdump.routes.feeds import *
 from linkdump.routes.api import *
+from linkdump.routes.frontend import *
+

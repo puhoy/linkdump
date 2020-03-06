@@ -1,0 +1,16 @@
+{% macro get_html() %}
+    {{ content | markdown }}
+{% endmacro %}
+
+<html lang="en">
+<head>
+    <title>{% block title %}linkdump{% endblock %}</title>
+</head>
+<body>
+
+<div id="content">{% filter markdown %}{% block content %}{% endblock %}{% endfilter %}</div>
+
+</body>
+
+
+</html>

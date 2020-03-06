@@ -1,9 +1,14 @@
+import os
+
 from dramatiq.brokers.redis import RedisBroker
 
 from linkdump.config import Config
 
 
 class DefaultConfig(Config):
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG = False
+
     DRAMATIQ_BROKER = RedisBroker
 
     SECURITY_LOGIN_URL = '/login'
@@ -14,4 +19,3 @@ class DefaultConfig(Config):
     SECURITY_CONFIRM_URL = '/confirm'
     SECURITY_POST_LOGIN_VIEW = '/'
     SECURITY_POST_LOGOUT_VIEW = '/'
-

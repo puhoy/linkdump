@@ -8,3 +8,4 @@ env/
 migrations/
 
 env_*
+settings.prod.conf

@@ -32,10 +32,10 @@ class User(db.Model, UserMixin):
     items = db.relationship("Item", secondary="bookmarks", lazy='dynamic')
 
     def add_item(self, item: 'Item'):
-        bookmark = Bookmarks()
-        bookmark.item = item
-        bookmark.user = self
-        self.items.append(bookmark)
+        #bookmark = Bookmarks()
+        #bookmark.item = item
+        #bookmark.user = self
+        self.items.append(item)
 
     def __repr__(self):
         return '<User %r>' % self.username

@@ -31,7 +31,7 @@ def feed():
         for item in user.items:
             if item.date_processing_finished:
                 entry = feed.add_entry()
-                entry.id(url_for('feed_item', username=user.username, item_id=item.id))
+                entry.id(url_for('feed_item', item_id=item.id))
                 entry.title(item.title)
                 if format == 'html':
                     entry.content(item.body)
@@ -47,12 +47,9 @@ def feed():
         return atomfeed
 
 
-@app.route('/feeds/atom/<user_email>/<item_id>')
-def feed_item(user_email, item_id):
+@app.route('/feeds/atom/<item_id>')
+def feed_item(item_id):
     item = Item.query.get(item_id)
-    user = User.query.filter_by(email=user_email).first()
-    if not user:
-        return '', 404
-    if user in item.users:
+    if current_user in item.users:
         return item.body
     return '', 404

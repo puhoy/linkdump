@@ -1,0 +1,68 @@
+version: '3.1'
+
+services:
+
+  service:
+    build: Dockerfile.dev
+    volumes:
+    - ./:/var/task
+    ports:
+    - 8080:5000
+    links:
+     - redis
+     - db
+    environment:
+      LINKDUMP_SETTINGS: '../settings.dev.conf'
+    command: >
+      bash -ic " \
+        pip install -r requirements.txt
+        ./start_dev_server.sh
+        "
+    tty: true
+
+  worker:
+    build: Dockerfile.dev
+    volumes:
+    - ./:/var/task
+    links:
+     - redis
+     - db
+    environment:
+      LINKDUMP_SETTINGS: '../settings.dev.conf'
+    command: >
+      bash -ic " \
+        flask worker --processes=1
+      "
+
+    tty: true
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: postgres
+      POSTGRES_DB: development
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    ports:
+    - 5432:5432
+    expose:
+      - 5432
+
+  redis:
+    image: 'bitnami/redis:5.0'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+    - 6379:6379
+    volumes:
+    - redis_data:/bitnami/redis/data
+    expose:
+      - 5432
+
+volumes:
+  redis_data:
+  postgres_data:
