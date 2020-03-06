@@ -5,7 +5,9 @@ env/
 
 *.pyc
 *__pychache__/
-migrations/
 
 env_*
 settings.prod.conf
+settings.dev.conf
+docker-compose.prod.yaml
+push.sh

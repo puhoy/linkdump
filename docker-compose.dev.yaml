@@ -14,9 +14,10 @@ services:
     environment:
       LINKDUMP_SETTINGS: '../settings.dev.conf'
     command: >
-      bash -ic " \
+      sh -ic " \
         pip install -r requirements.txt
-        ./start_dev_server.sh
+        export FLASK_ENV=development
+        flask run --host=0.0.0.0
         "
     tty: true
 
@@ -30,7 +31,7 @@ services:
     environment:
       LINKDUMP_SETTINGS: '../settings.dev.conf'
     command: >
-      bash -ic " \
+      sh -ic " \
         flask worker --processes=1
       "
 

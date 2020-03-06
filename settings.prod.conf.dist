@@ -2,7 +2,7 @@
 SECRET_KEY =
 SECURITY_PASSWORD_SALT =
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://'
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:secret@db/linkdump'
 
 SERVER_NAME =
 BASE_URL = 'http:///'
@@ -19,8 +19,9 @@ SECURITY_TRACKABLE = True
 # https://pythonhosted.org/Flask-Security/configuration.html
 SECURITY_REGISTERABLE = True
 
-# disable email verification
+SECURITY_EMAIL_SUBJECT_REGISTER = 'Welcome to linkdump!'
 SECURITY_CONFIRMABLE = True
+SECURITY_CHANGEABLE = True
 SECURITY_SEND_REGISTER_EMAIL = True
 SECURITY_SEND_PASSWORD_CHANGE_EMAIL = True
 SECURITY_SEND_PASSWORD_RESET_EMAIL = True

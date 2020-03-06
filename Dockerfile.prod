@@ -4,10 +4,10 @@ WORKDIR /var/task
 RUN apk add --virtual build-deps gcc python3-dev musl-dev libffi-dev libxslt-dev
 RUN apk add postgresql-dev
 
+COPY ./requirements.txt /var/task/requirements.txt
+RUN pip install -r requirements.txt
+
 COPY ./linkdump /var/task/linkdump
 COPY ./app.py /var/task/app.py
-COPY ./requirements.txt /var/task/requirements.txt
-
-RUN pip install -r requirements.txt
 
 CMD gunicorn -b 0.0.0.0:5000 -w 4 app:app --access-logfile - --error-logfile -

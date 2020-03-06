@@ -11,13 +11,18 @@ DRAMATIQ_BROKER_URL = 'redis://redis/'
 
 MAIL_SERVER = 'smtp.example.com'
 MAIL_PORT = 465
+MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_USERNAME = 'username'
+SECURITY_EMAIL_SENDER = ''
 MAIL_PASSWORD = 'password'
+
 SECURITY_TRACKABLE = True
 
 # https://pythonhosted.org/Flask-Security/configuration.html
 SECURITY_REGISTERABLE = True
+
+SECURITY_CHANGEABLE = True
 
 # disable email verification
 SECURITY_CONFIRMABLE = False

@@ -36,7 +36,7 @@ services:
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: postgres
-      POSTGRES_DB: development
+      POSTGRES_DB: linkdump
     volumes:
     - postgres_data:/var/lib/postgresql/data
     expose:

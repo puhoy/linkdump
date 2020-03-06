@@ -20,7 +20,7 @@ def get_feed(user):
 
 @app.route('/feeds/atom/')
 @http_auth_required
-def feed():
+def atom_feed():
     if not current_user.is_anonymous:
         format = request.args.get('format', 'html')
         user = User.query.filter_by(email=current_user.email).first()
