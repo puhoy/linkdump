@@ -1,14 +1,12 @@
-import requests
-from flask import request, url_for
 from urllib.parse import urljoin
 
-from flask_login import login_required
-
-from linkdump import app, db
-from linkdump.models import User, Item
-
-from feedgen.feed import FeedGenerator
 import pytz
+from feedgen.feed import FeedGenerator
+from flask import request, url_for
+from flask_security import http_auth_required, current_user
+
+from linkdump import app
+from linkdump.models import User, Item
 
 
 def get_feed(user):
@@ -19,33 +17,34 @@ def get_feed(user):
     return fg
 
 
-@app.route('/feeds/atom/<username>')
-@login_required
-def feed(username):
-    format = request.args.get('format', 'html')
 
-    user = User.query.filter_by(email=username).first()
-    if not user:
-        return ''
+@app.route('/feeds/atom/')
+@http_auth_required
+def feed():
+    if not current_user.is_anonymous:
+        format = request.args.get('format', 'html')
+        user = User.query.filter_by(email=current_user.email).first()
+        if not user:
+            return ''
 
-    feed = get_feed(user)
-    for item in user.items:
-        if item.date_processing_finished:
-            entry = feed.add_entry()
-            entry.id(url_for('feed_item', username=user.username, item_id=item.id))
-            entry.title(item.title)
-            if format == 'html':
-                entry.content(item.body)
-            elif format == 'text':
-                entry.content(item.body_plain_text)
-            entry.link(href=item.source)
+        feed = get_feed(user)
+        for item in user.items:
+            if item.date_processing_finished:
+                entry = feed.add_entry()
+                entry.id(url_for('feed_item', username=user.username, item_id=item.id))
+                entry.title(item.title)
+                if format == 'html':
+                    entry.content(item.body)
+                elif format == 'text':
+                    entry.content(item.body_plain_text)
+                entry.link(href=item.source)
 
-            timestamp = pytz.utc.localize(item.date_processing_finished)
-            entry.pubDate(timestamp)
-            entry.updated(timestamp)
+                timestamp = pytz.utc.localize(item.date_processing_finished)
+                entry.pubDate(timestamp)
+                entry.updated(timestamp)
 
-    atomfeed = feed.atom_str(pretty=True)
-    return atomfeed
+        atomfeed = feed.atom_str(pretty=True)
+        return atomfeed
 
 
 @app.route('/feeds/atom/<user_email>/<item_id>')

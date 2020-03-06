@@ -11,6 +11,8 @@ services:
     links:
      - redis
      - db
+    environment:
+      LINKDUMP_SETTINGS: '../dev.settings.conf'
     command: >
       bash -ic " \
         pip install -r requirements.txt
@@ -25,6 +27,8 @@ services:
     links:
      - redis
      - db
+    environment:
+      LINKDUMP_SETTINGS: '../dev.settings.conf'
     command: >
       bash -ic " \
         flask worker --processes=1

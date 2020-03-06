@@ -2,8 +2,6 @@ import flask
 from flask_mail import Mail
 from flask_security import Security, SQLAlchemyUserDatastore
 
-from linkdump.config import environments
-
 import logging
 import os
 
@@ -41,15 +39,15 @@ def create_app():
                 #static_url_path='/_static',
                 template_folder='routes/frontend/templates')
 
-    environment = os.environ.get('RML_ENV', 'development')
-    Config = environments[environment]
-    app.config.from_object(Config)
+    app.config.from_object('linkdump.config.default.DefaultConfig')
+    app.config.from_envvar('LINKDUMP_SETTINGS')
 
     db.init_app(app)
 
     dramatiq.init_app(app)
 
     security.init_app(app, SQLAlchemyUserDatastore(db, User, Role), register_form=ExtendedRegisterForm)
+
     mail.init_app(app)
 
     migration_dir = os.path.join(os.path.dirname(__file__), 'migrations')
@@ -79,3 +77,4 @@ def create_app():
 app = create_app()
 
 from linkdump.routes.feeds import *
+from linkdump.routes.api import *
