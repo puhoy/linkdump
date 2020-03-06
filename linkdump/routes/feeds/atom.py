@@ -34,7 +34,7 @@ def atom_feed():
                 entry.id(url_for('feed_item', item_id=item.id))
                 entry.title(item.title)
                 if format == 'html':
-                    entry.content(item.body)
+                    entry.content('%s' % item.body, type='html')
                 elif format == 'text':
                     entry.content(item.body_plain_text)
                 entry.link(href=item.source)
