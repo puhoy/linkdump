@@ -12,4 +12,4 @@ def item(item_id):
         return '', 404
     if not item in current_user.items:
         return '', 404
-    return render_template('item.md', item=item)
+    return render_template('item.html', item=item)

@@ -1,13 +1,15 @@
 {% extends "_main.html.jinja2" %}
 {% block content %}
 
+{% filter markdown %}
 [back]({{url_for('index')}})
 
 ## {{item.title}} [[source]({{item.source}})]
 
+{% endfilter %}
 
+{{item.body | safe}}
 
-{{item.body}}
 
 {% endblock %}
 
