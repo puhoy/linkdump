@@ -1,0 +1,53 @@
+@font-face {
+  font-family:Vollkorn;
+  src: url("/static/vollkorn/EOT/Vollkorn-Regular.eot");
+  src: local("Vollkorn"),
+  url("/static/vollkorn/WOFF2/Vollkorn-Regular.woff2") format("woff2"),
+  url("/static/vollkorn/WOFF/Vollkorn-Regular.woff") format("woff"),
+  url("/static/vollkorn/TFF/Vollkorn-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family:Vollkorn;
+  font-weight: bold;
+  src: url("/static/vollkorn/EOT/Vollkorn-Bold.eot");
+  src: local("Vollkorn Bold"),
+  local("Vollkorn"),
+  url("/static/vollkorn/WOFF2/Vollkorn-Bold.woff2") format("woff2"),
+  url("/static/vollkorn/WOFF/Vollkorn-Bold.woff") format("woff"),
+  url("/static/vollkorn/TFF/Vollkorn-Bold.ttf") format("truetype");
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: common-ligatures;
+  font-kerning: normal;
+  font-feature-settings: "liga";
+  font-size: 1.2em;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+li {
+  list-style-type:square;
+}
+
+li > ul > li {
+  list-style-type:disc;
+}
+
+* {
+  line-height: 1.375em;
+  font-family: Vollkorn, serif;
+}
+h2 {
+  font-size: 2em;
+  line-height: 1.5em;
+}
+h1 {
+  font-size: 3em;
+  line-height: 2.5em;
+}
+audio {
+  width: 80%;
+}
+object { max-height: 60vh }

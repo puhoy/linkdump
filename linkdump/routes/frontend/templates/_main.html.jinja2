@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <title>{% block title %}linkdump{% endblock %}</title>
-    <link rel="stylesheet" href="/static/tufte.css"/>
+    <link rel="stylesheet" href="/static/main.css"/>
 </head>
 <body>
+<section>
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         <ul>
@@ -14,6 +15,7 @@
         </ul>
     {% endif %}
 {% endwith %}
+</section>
 {% block content %}{% endblock %}
 
 </body>

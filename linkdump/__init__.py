@@ -49,7 +49,8 @@ def create_app():
     db.init_app(app)
     dramatiq.init_app(app)
     misaka.init_app(app)
-    security_ctx = security.init_app(app, SQLAlchemyUserDatastore(db, User, Role), register_form=ExtendedRegisterForm,
+    security_ctx = security.init_app(app, SQLAlchemyUserDatastore(db, User, Role),
+                                     register_form=ExtendedRegisterForm,
                                      confirm_register_form=ExtendedConfirmRegisterForm)
     mail.init_app(app)
     migration_dir = os.path.join(os.path.dirname(__file__), 'migrations')
