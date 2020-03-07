@@ -18,10 +18,12 @@ def index():
         flash('item created')
         create_item(current_user, add_item_form.url.data)
 
-    pagination = current_user.items.order_by(Item.date_processing_started.desc())\
-        .paginate(page=page, per_page=per_page, error_out=False)
+    pagination = None
+    if not current_user.is_anonymous:
+        pagination = current_user.items.order_by(Item.date_processing_started.desc())\
+            .paginate(page=page, per_page=per_page, error_out=False)
 
-    return render_template('index.html',
+    return render_template('index.html.jinja2',
                            pagination=pagination,
                            add_item_form=add_item_form,
                            per_page=20, page=1)

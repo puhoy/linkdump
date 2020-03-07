@@ -5,6 +5,6 @@ from wtforms.validators import DataRequired, URL
 
 class AddItemForm(FlaskForm):
     url = StringField('URL', validators=[DataRequired(), URL()])
-    submit = SubmitField('Add')
+    submit = SubmitField('Add URL')
 
 

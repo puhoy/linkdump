@@ -1,15 +1,15 @@
 {% extends "_main.html.jinja2" %}
 {% block content %}
 
-{% filter markdown %}
-[back]({{url_for('index')}})
 
-## {{item.title}} [[source]({{item.source}})]
+<article>
+<a href="{{url_for('index')}}">< back</a>
 
-{% endfilter %}
+    <section>
 
-{{item.body | safe}}
-
-
+        <h2>{{item.title}} <a href="{{item.source}}">[source]</a></h2>
+    </section>
+    {{item.body_as_section | safe}}
+</article>
 {% endblock %}
 

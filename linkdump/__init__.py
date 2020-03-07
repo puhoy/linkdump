@@ -40,7 +40,7 @@ def create_app():
     from linkdump.util.send_mail import _send_mail_task
 
     app = Flask(__name__,
-                # static_url_path='/_static',
+                static_folder='routes/frontend/static',
                 template_folder='routes/frontend/templates')
 
     app.config.from_object('linkdump.config.default.DefaultConfig')

@@ -1,0 +1,22 @@
+{% extends "_main.html.jinja2" %}
+{% import "macros.html" as macros %}
+{% block content %}
+
+    <article>
+        <h1>linkdump</h1>
+
+        <section>
+            <h3>#todo</h3>
+            <p>
+                Right now there is just an endpoint to add items.
+            <pre><code>
+http POST {{ url_for('add_item', _external=True) }} \
+    url='https://github.com/puhoy/linkdump' \
+    -a "user_email:password"
+</code></pre>
+            </p>
+        </section>
+    </article>
+
+{% endblock %}
+

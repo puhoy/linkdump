@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>{% block title %}linkdump{% endblock %}</title>
+    <link rel="stylesheet" href="/static/tufte.css"/>
 </head>
 <body>
 {% with messages = get_flashed_messages() %}
@@ -13,7 +14,7 @@
         </ul>
     {% endif %}
 {% endwith %}
-<div id="content">{% block content %}{% endblock %}</div>
+{% block content %}{% endblock %}
 
 </body>
 

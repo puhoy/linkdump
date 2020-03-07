@@ -1,0 +1,76 @@
+{% extends "_main.html.jinja2" %}
+{% import "macros.html" as macros %}
+{% block content %}
+
+    <article>
+        <h1>linkdump</h1>
+
+        <section>
+            Public feeds on this server:
+            []
+        </section>
+        {% if current_user.is_anonymous %}
+            <section>
+                <p>
+                    linkdump is a tool that helps you adding articles you want to read to
+                    an {{ macros.link('atom feed', 'https://en.wikipedia.org/wiki/Atom_(Web_standard)') }}.
+                </p>
+                <p>
+                    You add URLs, and it tries to fetch the main content from that site, and adds it to your personal
+                    feed.
+                </p>
+                <p>
+                    Also, after a while, you have a nice collection to browse through. :)
+                </p>
+            </section>
+            <section>
+                <p>
+                    <a href="{{ url_for('security.login') }}">login</a><br>
+                    <a href="{{ url_for('security.register') }}">register</a>
+                </p>
+            </section>
+        {% else %}
+            <section>
+                <h3>Hey, {{ current_user.email }}</h3>
+                <p>
+                    {{ macros.link('logout', url_for('security.logout')) }}<br>
+                    {{ macros.link('change password', url_for('security.change_password')) }}<br>
+                </p>
+
+                <form action="" method="post" novalidate>
+                    {{ add_item_form.hidden_tag() }}
+                    {{ add_item_form.url(placeholder='https://' ) }}
+                    {{ add_item_form.submit() }}
+                </form>
+            </section>
+            <section>
+                <p>
+                    The content of the links you add is available to you as an Atom Feed. You can find
+                    your feed {{ macros.link('here', url_for('atom_feed', _external=True)) }}.
+                </p>
+                <p>
+                    This is your personal feed, and its password protected - so dont forget to set that up, when you add
+                    it to your feed reader.
+                <p>if you dont like this page, you can also just use the {{ macros.link('API', 'api') }} to add more
+                    URLs. :)</p>
+            </section>
+            <section>
+                <h3>items</h3>
+                {% for item in pagination.items %}
+                    {% if item.date_processing_finished %}
+                        <dl>
+                            <dt><a href={{ url_for('item', item_id=item.id) }}>{{ item.title }}</a></dt>
+                            <dd>added {{ item.date_added }}</dd>
+                        </dl>
+                    {% else %}
+                        {{ item.source }} - processing...
+                    {% endif %}
+                {% endfor %}
+
+                {{ macros.render_pagination(pagination, 'index') }}
+
+            </section>
+        {% endif %}
+    </article>
+{% endblock %}
+

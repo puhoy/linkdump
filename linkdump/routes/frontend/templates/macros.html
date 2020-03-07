@@ -1,16 +1,22 @@
-
 {% macro render_pagination(pagination, endpoint) %}
-  <div class=pagination>
-  {%- for page in pagination.iter_pages() %}
+{% if pagination %}
+<div class=pagination>
+    {%- for page in pagination.iter_pages() %}
     {% if page %}
-      {% if page != pagination.page %}
-        <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
-      {% else %}
-        <strong>{{ page }}</strong>
-      {% endif %}
+    {% if page != pagination.page %}
+    <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
     {% else %}
-      <span class=ellipsis>…</span>
+    <strong>{{ page }}</strong>
     {% endif %}
-  {%- endfor %}
-  </div>
+    {% else %}
+    <span class=ellipsis>…</span>
+    {% endif %}
+    {%- endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+
+{% macro link(label, link) %}
+<a href="{{link}}">{{label}}</a>
 {% endmacro %}
