@@ -21,12 +21,12 @@ def index():
         create_item(current_user, add_item_form.url.data)
 
     feed_public_form = FeedPublicForm()
-    feed_public_form.is_public.data = False
     if feed_public_form.submit.data and feed_public_form.validate_on_submit():
         flash('saved!')
         current_user.feed_is_public = feed_public_form.is_public.data
         db.session.add(current_user)
         db.session.commit()
+    feed_public_form.is_public.data = False
 
     items_pagination = None
     if not current_user.is_anonymous:
