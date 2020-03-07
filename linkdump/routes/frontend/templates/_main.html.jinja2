@@ -1,14 +1,19 @@
-{% macro get_html() %}
-    {{ content | markdown }}
-{% endmacro %}
 
 <html lang="en">
 <head>
     <title>{% block title %}linkdump{% endblock %}</title>
 </head>
 <body>
-
-<div id="content">{% filter markdown %}{% block content %}{% endblock %}{% endfilter %}</div>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<div id="content">{% block content %}{% endblock %}</div>
 
 </body>
 

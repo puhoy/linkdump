@@ -4,28 +4,17 @@ from flask_security import http_auth_required, current_user
 
 from linkdump import app, db
 from linkdump.models import Item
+from linkdump.util.add_item import create_item
 
 
-@app.route('/items', methods=['POST'])
+@app.route('/api/items', methods=['POST'])
 @http_auth_required
 def add_item():
     if current_user.is_anonymous:
         return '', 403
-
     url = request.json['url']
-    response = requests.head(url)
-    if not response.ok:
-        return 'cant access %s' % url
-
-    (created, item) = Item.create(source=url, process=True)
-    item: Item
-    if created:
-        print('item %s created' % item)
+    success, item = create_item(current_user, url)
+    if success:
+        return 'added %s' % url, 200
     else:
-        print('using item %s from db' % item)
-    if item not in current_user.items.all():
-        current_user.add_item(item)
-    else:
-        print('user already has this item')
-    db.session.commit()
-    return 'added %s' % url, 200
+        return 'couldnt add url', 500
