@@ -16,12 +16,12 @@ def index():
     per_page = int(request.args.get('per_page', 20))
 
     add_item_form = AddItemForm()
-    if add_item_form.submit.data and add_item_form.validate_on_submit():
+    if add_item_form.add_item_submit.data and add_item_form.validate_on_submit():
         flash('item created')
         create_item(current_user, add_item_form.url.data)
 
     feed_public_form = FeedPublicForm()
-    if feed_public_form.submit.data and feed_public_form.validate_on_submit():
+    if feed_public_form.feed_public_submit.data and feed_public_form.validate_on_submit():
         flash('saved!')
         current_user.feed_is_public = feed_public_form.is_public.data
         db.session.add(current_user)

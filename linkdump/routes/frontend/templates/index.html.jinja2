@@ -22,7 +22,7 @@
                 <form action="" method="post" novalidate>
                     {{ feed_public_form.hidden_tag() }}
                     {{ feed_public_form.is_public.label }}{{ feed_public_form.is_public() }}<br>
-                    {{ feed_public_form.submit() }}
+                    {{ feed_public_form.feed_public_submit() }}
                 </form>
             {% endif %}
         </section>
@@ -57,7 +57,7 @@
                 <form action="" method="post" novalidate>
                     {{ add_item_form.hidden_tag() }}
                     {{ add_item_form.url(placeholder='https://' ) }}
-                    {{ add_item_form.submit() }}
+                    {{ add_item_form.add_item_submit() }}
                 </form>
             </section>
             <section>
