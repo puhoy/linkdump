@@ -105,6 +105,10 @@ def create_app():
 
 app = create_app()
 
+from linkdump.cli import cli
+
+app.cli.add_command(cli)
+
 from linkdump.routes.feeds import *
 from linkdump.routes.api import *
 from linkdump.routes.frontend import *
