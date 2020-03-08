@@ -75,7 +75,6 @@ hr {
 }
 
 
-
 .flex-row {
     display: flex;
     flex-direction: row;
@@ -94,15 +93,7 @@ hr {
     flex-direction: column;
 }
 
-
-.flex-item-small {
-    flex-grow: 5;
-    flex-shrink: 1;
-}
-
 .flex-item {
     flex-grow: 1;
-    flex-shrink: 1;
-
     padding-right: 1em;
 }

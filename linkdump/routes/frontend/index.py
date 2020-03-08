@@ -12,8 +12,10 @@ from linkdump.util.add_item import create_item
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    users_with_public_feed = User.query.filter_by(feed_is_public=True).order_by(func.random()).limit(20)
     if current_user.is_anonymous:
-        return render_template('index_anonymous.html.jinja2')
+        return render_template('index_anonymous.html.jinja2',
+                               users_with_public_feed=users_with_public_feed)
 
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 20))
@@ -40,7 +42,6 @@ def index():
     items_pagination = current_user.items.order_by(Item.date_processing_started.desc()) \
         .paginate(page=page, per_page=per_page, error_out=False)
 
-    users_with_public_feed = User.query.filter_by(feed_is_public=True).order_by(func.random()).limit(20)
 
     return render_template('index.html.jinja2',
                            items_pagination=items_pagination,
