@@ -12,6 +12,9 @@ from linkdump.util.add_item import create_item
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
+    if current_user.is_anonymous:
+        return render_template('index_anonymous.html.jinja2')
+
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 20))
 
@@ -23,16 +26,19 @@ def index():
     feed_public_form = FeedPublicForm()
     if feed_public_form.feed_public_submit.data and feed_public_form.validate_on_submit():
         flash('saved!')
-        current_user.feed_is_public = feed_public_form.is_public.data
+        current_user.feed_is_public = feed_public_form.is_public.data == 'True'
         db.session.add(current_user)
         db.session.commit()
-    feed_public_form.is_public.data = False
 
-    items_pagination = None
-    if not current_user.is_anonymous:
-        feed_public_form.is_public.data = current_user.feed_is_public
-        items_pagination = current_user.items.order_by(Item.date_processing_started.desc()) \
-            .paginate(page=page, per_page=per_page, error_out=False)
+    if not current_user.feed_is_public:
+        feed_public_form.feed_public_submit.label.text = 'make my feed public!'
+        feed_public_form.is_public.data = True
+    else:
+        feed_public_form.feed_public_submit.label.text = 'DONT make my feed public!'
+        feed_public_form.is_public.data = False
+    
+    items_pagination = current_user.items.order_by(Item.date_processing_started.desc()) \
+        .paginate(page=page, per_page=per_page, error_out=False)
 
     users_with_public_feed = User.query.filter_by(feed_is_public=True).order_by(func.random()).limit(20)
 

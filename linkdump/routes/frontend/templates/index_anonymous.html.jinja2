@@ -1,0 +1,42 @@
+{% extends "_main.html.jinja2" %}
+{% import "macros.html" as macros %}
+{% block content %}
+
+    <article>
+        <h1>linkdump</h1>
+
+        Public atom feeds on this server: <br>
+        {% if users_with_public_feed.all()|length == 0 %}
+            None!
+        {% endif %}
+        <ul>
+            {% for user in users_with_public_feed %}
+                <li>
+                    <a href="{{ url_for('public_feed', username=user.username, _external=True) }}">{{ user.username }}</a><br>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+        <section>
+            <p>
+                linkdump is a tool that helps you adding articles you want to read to
+                an {{ macros.link('atom feed', 'https://en.wikipedia.org/wiki/Atom_(Web_standard)') }}.
+            </p>
+            <p>
+                You add URLs, and it tries to fetch the main content from that site, and adds it to your personal
+                feed.
+            </p>
+            <p>
+                Also, after a while, you have a nice collection to browse through. :)
+            </p>
+        </section>
+        <section>
+            <p>
+                <a href="{{ url_for('security.login') }}">login</a><br>
+                <a href="{{ url_for('security.register') }}">register</a>
+            </p>
+        </section>
+    </article>
+{% endblock %}
+

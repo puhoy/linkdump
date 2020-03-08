@@ -65,3 +65,44 @@ audio {
 object {
     max-height: 60vh
 }
+
+
+hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+@media only screen and (max-width: 800px) {
+    .flex-row {
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.flex-item-small {
+    flex-grow: 5;
+    flex-shrink: 1;
+}
+
+.flex-item {
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    padding-right: 1em;
+}

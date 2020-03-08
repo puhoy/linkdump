@@ -5,89 +5,83 @@
     <article>
         <h1>linkdump</h1>
 
-        <section>
-            <p>
-                Public feeds on this server:
-                {% if users_with_public_feed.all()|length == 0 %}
-                    None!
-                {% endif %}
-            </p>
-            <ul>{% for user in users_with_public_feed %}
-                <li>
-                    <a href="{{ url_for('public_feed', username=user.username, _external=True) }}">{{ user.username }}</a><br>
-                </li>
-            {% endfor %}
-            </ul>
-            {% if not current_user.is_anonymous %}
-                <form action="" method="post" novalidate>
-                    {{ feed_public_form.hidden_tag() }}
-                    {{ feed_public_form.is_public.label }}{{ feed_public_form.is_public() }}<br>
-                    {{ feed_public_form.feed_public_submit() }}
-                </form>
-            {% endif %}
-        </section>
-        {% if current_user.is_anonymous %}
-            <section>
-                <p>
-                    linkdump is a tool that helps you adding articles you want to read to
-                    an {{ macros.link('atom feed', 'https://en.wikipedia.org/wiki/Atom_(Web_standard)') }}.
-                </p>
-                <p>
-                    You add URLs, and it tries to fetch the main content from that site, and adds it to your personal
-                    feed.
-                </p>
-                <p>
-                    Also, after a while, you have a nice collection to browse through. :)
-                </p>
-            </section>
-            <section>
-                <p>
-                    <a href="{{ url_for('security.login') }}">login</a><br>
-                    <a href="{{ url_for('security.register') }}">register</a>
-                </p>
-            </section>
-        {% else %}
-            <section>
-                <h3>Hey, {{ current_user.email }}</h3>
-                <p>
+        <div class="flex-row">
+            <div class="flex-column">
+                <div class="flex-item">
+                    <h3>Hey, {{ current_user.email }}!</h3>
+
+                    <p>
+                        The content of the links you add is available to you as an Atom Feed. You can find
+                        your feed {{ macros.link('here', url_for('atom_feed', _external=True)) }}.
+                    </p>
+                    <p>
+                        This is your personal feed, and its password protected - so dont forget to set that up, when you
+                        add
+                        it to your feed reader. </p>
+                    <p>If you dont like this page, you can also just use the {{ macros.link('API', 'api') }} to add more
+                        URLs. :)</p>
+                </div>
+            </div>
+            <div class="flex-column">
+                <div class="flex-item">
+                    <hr>
                     {{ macros.link('logout', url_for('security.logout')) }}<br>
                     {{ macros.link('change password', url_for('security.change_password')) }}<br>
-                </p>
+                    <form action="" method="post" novalidate>
+                        {{ feed_public_form.hidden_tag() }}
+                        {{ feed_public_form.is_public() }}
+                        {{ feed_public_form.feed_public_submit() }}
+                    </form>
 
-                <form action="" method="post" novalidate>
-                    {{ add_item_form.hidden_tag() }}
-                    {{ add_item_form.url(placeholder='https://' ) }}
-                    {{ add_item_form.add_item_submit() }}
-                </form>
-            </section>
-            <section>
-                <p>
-                    The content of the links you add is available to you as an Atom Feed. You can find
-                    your feed {{ macros.link('here', url_for('atom_feed', _external=True)) }}.
-                </p>
-                <p>
-                    This is your personal feed, and its password protected - so dont forget to set that up, when you add
-                    it to your feed reader.
-                <p>If you dont like this page, you can also just use the {{ macros.link('API', 'api') }} to add more
-                    URLs. :)</p>
-            </section>
-            <section>
-                <h3>Items</h3> <a href="{{ url_for('search') }}">search</a>
-                {% for item in items_pagination.items %}
-                    {% if item.date_processing_finished %}
-                        <dl>
-                            <dt><a href={{ url_for('item', item_id=item.id) }}>{{ item.title }}</a></dt>
-                            <dd>added {{ item.date_added }}</dd>
-                        </dl>
-                    {% else %}
-                        {{ item.source }} - processing...
+                    Public atom feeds on this server: <br>
+                    {% if users_with_public_feed.all()|length == 0 %}
+                        None!
                     {% endif %}
-                {% endfor %}
+                    <ul>
+                        {% for user in users_with_public_feed %}
+                            <li>
+                                <a href="{{ url_for('public_feed', username=user.username, _external=True) }}">{{ user.username }}</a><br>
+                            </li>
+                        {% endfor %}
 
-                {{ macros.render_pagination(items_pagination, 'index') }}
+                    </ul>
+                    <hr>
+                </div>
 
-            </section>
-        {% endif %}
+            </div>
+        </div>
+
+        <section>
+            <div class="flex-row">
+                <div class="flex-column">
+                    <div class="flex-item">
+                        <form action="" method="post" novalidate>
+                            {{ add_item_form.hidden_tag() }}
+                            {{ add_item_form.url(placeholder='https://' ) }}
+                            {{ add_item_form.add_item_submit() }}
+                        </form>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <a href="{{ url_for('search') }}">search</a>
+                    </div>
+                </div>
+            </div>
+            <h3>Items</h3>
+
+            {% for item in items_pagination.items %}
+                {% if item.date_processing_finished %}
+                    <dl>
+                        <dt><a href={{ url_for('item', item_id=item.id) }}>{{ item.title }}</a></dt>
+                        <dd>added {{ item.date_added }}</dd>
+                    </dl>
+                {% else %}
+                    {{ item.source }} - processing...
+                {% endif %}
+            {% endfor %}
+
+            {{ macros.render_pagination(items_pagination, 'index') }}
+
+        </section>
     </article>
 {% endblock %}
 
