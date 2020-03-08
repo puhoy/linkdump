@@ -72,7 +72,7 @@
                     URLs. :)</p>
             </section>
             <section>
-                <h3>Items</h3>
+                <h3>Items</h3> <a href="{{ url_for('search') }}">search</a>
                 {% for item in items_pagination.items %}
                     {% if item.date_processing_finished %}
                         <dl>

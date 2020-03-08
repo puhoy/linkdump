@@ -1,8 +1,11 @@
+from typing import TYPE_CHECKING
+
 from flask_security import UserMixin
 
 from linkdump import db
-from linkdump.models.item import Item
-from linkdump.models import Bookmarks
+
+if TYPE_CHECKING:
+    from linkdump.models.item import Item
 
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('users.id')),

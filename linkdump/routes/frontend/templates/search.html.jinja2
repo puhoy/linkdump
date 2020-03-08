@@ -1,0 +1,26 @@
+{% extends "_main.html.jinja2" %}
+{% block content %}
+
+    <article>
+        <a href="{{ url_for('index') }}">< back</a>
+        <h2>Search results for "{{ query_string }}"</h2>
+
+        <form action="" method="post" novalidate>
+            {{ search_form.hidden_tag() }}
+            {{ search_form.query.label }}{{ search_form.query() }}<br>
+            {{ search_form.submit() }}
+        </form>
+
+        <section>
+            {% for item in items_pagination.items %}
+                <p><a href="{{ url_for('item', item_id=item.id) }}">{{ item.title }}</a> <a href="{{ item.source }}">[source]</a>
+                </p>
+                {% for word in query_string.split(' ') %}
+                    {{ item.text_around_word(word, 50) }}
+                {% endfor %}
+            {% endfor %}
+        </section>
+
+    </article>
+{% endblock %}
+

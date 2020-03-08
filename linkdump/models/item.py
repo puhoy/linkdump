@@ -1,10 +1,14 @@
 from datetime import date, datetime
+import re
 
 import requests
 from readability import Document
+from sqlalchemy import Index, or_, and_
 
 from linkdump import db, dramatiq
 from xml.etree import ElementTree
+
+from linkdump.models import User
 
 
 class Item(db.Model):
@@ -19,7 +23,7 @@ class Item(db.Model):
 
     source = db.Column(db.String, nullable=False)
     source_response_raw = db.Column(db.Text, nullable=True)
-    
+
     date_added = db.Column(db.Date, nullable=False,
                            default=date.today)
 
@@ -37,7 +41,8 @@ class Item(db.Model):
         return ''.join(ElementTree.fromstring(html).itertext())
 
     @staticmethod
-    def create(source, title=None, body=None, source_response_raw=None, body_plain_text=None, date_added=None, save=True, process=True) -> (bool, 'Item'):
+    def create(source, title=None, body=None, source_response_raw=None, body_plain_text=None, date_added=None,
+               save=True, process=True) -> (bool, 'Item'):
         if not date_added:
             date_added = date.today()
 
@@ -58,10 +63,10 @@ class Item(db.Model):
             if save:
                 db.session.add(item)
                 db.session.commit()
-            
+
             if save and process:
                 item.process()
-            
+
         return created, item
 
     def __repr__(self):
@@ -70,6 +75,49 @@ class Item(db.Model):
     def process(self):
         print('processing item...')
         _process_url.send(self.id, self.source)
+
+    def text_around_word(self, word, n):
+        index = self.body_plain_text.find(word)
+        prefix = ''
+        suffix = ''
+
+        if index == -1:
+            return ''
+
+        if index - n < 0:
+            start = 0
+        else:
+            start = index - n
+            prefix = '...'
+        if index + len(word) + n >= len(self.body_plain_text):
+            end = len(self.body_plain_text) -1
+        else:
+            end = index + len(word) + n
+            suffix = '...'
+        return prefix + self.body_plain_text[start:end] + suffix
+
+    @classmethod
+    def search(cls, query_string, user=None):
+        filters = []
+        for term in query_string.split(' '):
+            filters.append(
+                or_(cls.title.ilike('%{}%'.format(term)),
+                    cls.source.ilike('%{}%'.format(term)),
+                    cls.body_plain_text.ilike('%{}%'.format(term))
+                    )
+            )
+        query = cls.query
+        if user:
+            query = query.filter(Item.users.any(User.id==user.id))
+        items = query.filter(
+            and_(*filters)
+        ).distinct()
+        return items
+
+
+item_source_index = Index('item_source_idx', Item.source)
+item_title_index = Index('item_title_idx', Item.source)
+item_body_plain_text_index = Index('item_body_plain_text_idx', Item.source)
 
 
 @dramatiq.actor(max_retries=3)
@@ -80,7 +128,7 @@ def _process_url(id: int, url: str):
     title = doc.title()
     body = doc.summary(html_partial=True)
     body_plain_text = Item.strip_tags(body)
-    
+
     date_processing_finished = datetime.utcnow()
 
     item = Item.query.get(id)

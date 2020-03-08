@@ -1,5 +1,5 @@
 from flask import render_template
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from linkdump import app
 from linkdump.models import Item
@@ -7,6 +7,7 @@ from linkdump.models import Item
 from lxml import etree
 
 
+@login_required
 @app.route('/items/<int:item_id>', methods=['GET', 'POST'])
 def item(item_id):
     item = Item.query.get(item_id)
