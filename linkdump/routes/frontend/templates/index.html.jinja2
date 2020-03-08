@@ -68,7 +68,7 @@
                 <p>
                     This is your personal feed, and its password protected - so dont forget to set that up, when you add
                     it to your feed reader.
-                <p>if you dont like this page, you can also just use the {{ macros.link('API', 'api') }} to add more
+                <p>If you dont like this page, you can also just use the {{ macros.link('API', 'api') }} to add more
                     URLs. :)</p>
             </section>
             <section>
@@ -84,7 +84,7 @@
                     {% endif %}
                 {% endfor %}
 
-                {{ macros.render_pagination(pagination, 'index') }}
+                {{ macros.render_pagination(items_pagination, 'index') }}
 
             </section>
         {% endif %}

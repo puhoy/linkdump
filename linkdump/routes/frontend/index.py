@@ -41,4 +41,4 @@ def index():
                            users_with_public_feed=users_with_public_feed,
                            add_item_form=add_item_form,
                            feed_public_form=feed_public_form,
-                           per_page=20, page=1)
+                           args=request.args)
