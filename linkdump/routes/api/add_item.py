@@ -11,7 +11,9 @@ def add_item():
     if current_user.is_anonymous:
         return '', 403
     url = request.json['url']
-    success, item = create_item(current_user, url)
+    html = request.json.get('html', None)
+
+    success, item = create_item(current_user, url, html)
     if success:
         return 'added %s' % url, 200
     else:

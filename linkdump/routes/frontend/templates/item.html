@@ -1,12 +1,10 @@
 {% extends "_main.html.jinja2" %}
 {% block content %}
 
-
 <article>
 <a href="{{url_for('index')}}">< back</a>
-
+    <p><a href="{{ url_for('item_shared', item_key=item_key, _external=True)}}">share</a></p>
     <section>
-
         <h2>{{item.title}} <a href="{{item.source}}">[source]</a></h2>
     </section>
     {{item.body_as_section | safe}}

@@ -13,6 +13,8 @@ from sqlalchemy import MetaData
 from flask_dramatiq import Dramatiq
 from flask_misaka import Misaka
 
+from flask_cors import CORS
+
 logger = logging.getLogger(__name__)
 
 # fix migration for sqlite: https://github.com/miguelgrinberg/Flask-Migrate/issues/61#issuecomment-208131722
@@ -45,6 +47,8 @@ def create_app():
 
     app.config.from_object('linkdump.config.default.DefaultConfig')
     app.config.from_envvar('LINKDUMP_SETTINGS')
+
+    CORS(app)
 
     db.init_app(app)
     dramatiq.init_app(app)
