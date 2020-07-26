@@ -3,7 +3,9 @@ version: '3.1'
 services:
 
   service:
-    build: Dockerfile.dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
     - ./:/var/task
     ports:
@@ -13,25 +15,31 @@ services:
      - db
     environment:
       LINKDUMP_SETTINGS: '../settings.dev.conf'
+      FLASK_ENV: development
     command: >
-      sh -ic " \
+      bash -ic " \
         pip install -r requirements.txt
-        export FLASK_ENV=development
         flask run --host=0.0.0.0
         "
     tty: true
 
   worker:
-    build: Dockerfile.dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
     - ./:/var/task
     links:
      - redis
      - db
+    depends_on:
+      - service
     environment:
       LINKDUMP_SETTINGS: '../settings.dev.conf'
+      FLASK_ENV: development
     command: >
-      sh -ic " \
+      bash -ic " \
+        # todo: waitforit
         flask worker --processes=1
       "
 

@@ -39,9 +39,8 @@ def index():
         feed_public_form.feed_public_submit.label.text = 'DONT make my feed public!'
         feed_public_form.is_public.data = False
     
-    items_pagination = current_user.items.order_by(Item.date_processing_started.desc()) \
+    items_pagination = current_user.items.order_by(Item.date_added.desc()) \
         .paginate(page=page, per_page=per_page, error_out=False)
-
 
     return render_template('index.html.jinja2',
                            items_pagination=items_pagination,

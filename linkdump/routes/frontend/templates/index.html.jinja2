@@ -70,10 +70,7 @@
 
             {% for item in items_pagination.items %}
                 {% if item.date_processing_finished %}
-                    <dl>
-                        <dt><a href={{ url_for('item', item_id=item.id) }}>{{ item.title }}</a></dt>
-                        <dd>added {{ item.date_added }}</dd>
-                    </dl>
+                   {{ macros.render_list_item(item) }}
                 {% else %}
                     {{ item.source }} - processing...
                 {% endif %}

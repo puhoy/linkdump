@@ -9,7 +9,13 @@ from linkdump import db, dramatiq
 from xml.etree import ElementTree
 
 from linkdump.models import User
+from bs4 import BeautifulSoup
 
+from linkdump.models.social_meta import SocialMeta
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 class Item(db.Model):
     __tablename__ = 'items'
@@ -35,6 +41,9 @@ class Item(db.Model):
     date_processing_finished = db.Column(db.DateTime, nullable=True)
 
     users = db.relationship("User", secondary="bookmarks", lazy='dynamic')
+
+    social_meta_id = db.Column(db.Integer, db.ForeignKey('social_meta.id'))
+    social_meta = db.relationship("SocialMeta", backref=db.backref("item", uselist=False), lazy='joined')
 
     @staticmethod
     def strip_tags(html):
@@ -141,9 +150,15 @@ def _process_url(id: int, url: str):
 
     date_processing_finished = datetime.utcnow()
 
-    item = Item.query.get(id)
+    item: 'Item' = Item.query.get(id)
 
     item.populate_from_html(response.text)
+
+    social_meta = SocialMeta.get_social_meta(response.text)
+    logger.info(f'adding social meta title {social_meta.og_title}, desc {social_meta.og_description}')
+    item.social_meta = social_meta
+    db.session.add(social_meta)
+    db.session.commit()
 
     item.date_processing_started = date_processing_started
     item.date_processing_finished = date_processing_finished

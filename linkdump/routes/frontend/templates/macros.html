@@ -21,3 +21,16 @@
 {% macro link(label, link) %}
 <a href="{{link}}">{{label}}</a>
 {% endmacro %}
+
+
+{% macro render_list_item(item) %}
+<dl>
+    <dt><a href={{ url_for('item', item_id=item.id) }}>{{ item.title }}</a></dt>
+    <dd><b>{{ item.social_meta.og_title }}</b></dd>
+    <dd>{{ item.social_meta.og_description }}</dd>
+    <dd>added {{ item.date_added }}</dd>
+</dl>
+
+
+{% endmacro %}
+
