@@ -27,7 +27,7 @@ idna==2.9
 itsdangerous==1.1.0
 Jinja2==2.11.1
 lxml==4.5.0
-Mako==1.1.2
+Mako==1.2.2
 MarkupSafe==1.1.1
 misaka==2.1.1
 passlib==1.7.2
